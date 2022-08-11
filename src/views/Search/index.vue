@@ -11,37 +11,64 @@
 						</li>
 					</ul>
 					<ul class="fl sui-tag">
-						<li class="with-x" v-if="searchParams.categoryName">{{searchParams.categoryName}}<i @click="remove()">×</i></li>
-						<li class="with-x" v-if="searchParams.keyword">{{searchParams.keyword}}<i @click="kremove()">×</i></li>
-						<li class="with-x" v-if="searchParams.trademark">{{searchParams.trademark.split(':')[1]}}<i @click="tremove()">×</i></li>
+						<li class="with-x" v-if="searchParams.categoryName">
+							{{ searchParams.categoryName
+							}}<i @click="remove()">×</i>
+						</li>
+						<li class="with-x" v-if="searchParams.keyword">
+							{{ searchParams.keyword
+							}}<i @click="kremove()">×</i>
+						</li>
+						<li class="with-x" v-if="searchParams.trademark">
+							{{ searchParams.trademark.split(':')[1]
+							}}<i @click="tremove()">×</i>
+						</li>
+						<li
+							class="with-x"
+							v-for="(attr, index) in searchParams.props"
+							:key="index"
+						>
+							{{ attr.split(':')[1]
+							}}<i @click="removeAttr(index)">×</i>
+						</li>
 					</ul>
 				</div>
 
 				<!--selector-->
-				<SearchSelector @tradeInfo="tradeInfo"/>
+				<SearchSelector @tradeInfo="tradeInfo" @attrInfo="attrInfo" />
 
 				<!--details-->
 				<div class="details clearfix">
 					<div class="sui-navbar">
 						<div class="navbar-inner filter">
 							<ul class="sui-nav">
-								<li class="active">
-									<a href="#">综合</a>
+								<li
+									:class="{ active: isOne() }"
+									@click="sort(1)"
+								>
+									<a
+										>综合
+										<span v-show="isOne()">{{
+											searchParams.order.indexOf('asc') !=
+											-1
+												? '⬆'
+												: '⬇'
+										}}</span></a
+									>
 								</li>
-								<li>
-									<a href="#">销量</a>
-								</li>
-								<li>
-									<a href="#">新品</a>
-								</li>
-								<li>
-									<a href="#">评价</a>
-								</li>
-								<li>
-									<a href="#">价格⬆</a>
-								</li>
-								<li>
-									<a href="#">价格⬇</a>
+								<li
+									:class="{ active: isTwo() }"
+									@click="sort(2)"
+								>
+									<a
+										>价格
+										<span v-show="isTwo()">{{
+											searchParams.order.indexOf('asc') !=
+											-1
+												? '⬆'
+												: '⬇'
+										}}</span></a
+									>
 								</li>
 							</ul>
 						</div>
@@ -98,35 +125,7 @@
 							</li>
 						</ul>
 					</div>
-					<div class="fr page">
-						<div class="sui-pagination clearfix">
-							<ul>
-								<li class="prev disabled">
-									<a href="#">«上一页</a>
-								</li>
-								<li class="active">
-									<a href="#">1</a>
-								</li>
-								<li>
-									<a href="#">2</a>
-								</li>
-								<li>
-									<a href="#">3</a>
-								</li>
-								<li>
-									<a href="#">4</a>
-								</li>
-								<li>
-									<a href="#">5</a>
-								</li>
-								<li class="dotted"><span>...</span></li>
-								<li class="next">
-									<a href="#">下一页»</a>
-								</li>
-							</ul>
-							<div><span>共10页&nbsp;</span></div>
-						</div>
-					</div>
+					<Pagnation />
 				</div>
 			</div>
 		</div>
@@ -139,7 +138,7 @@ import { mapGetters, mapState } from 'vuex'
 export default {
 	name: 'Search',
 	components: {
-		SearchSelector,
+		SearchSelector
 	},
 	data() {
 		return {
@@ -149,7 +148,7 @@ export default {
 				category3Id: '',
 				categoryName: '',
 				keyword: '',
-				order: '',
+				order: '1:desc',
 				pageNo: 1,
 				pageSize: 10,
 				props: [],
@@ -164,50 +163,94 @@ export default {
 		this.getData()
 	},
 	computed: {
-		...mapGetters(['goodsList'])
+		...mapGetters(['goodsList']),
 	},
 	methods: {
 		getData() {
 			this.$store.dispatch('getSearchList', this.searchParams)
 		},
-		remove () {
+		remove() {
 			this.searchParams.categoryName = undefined
 			this.searchParams.category1Id = undefined
 			this.searchParams.category2Id = undefined
 			this.searchParams.category3Id = undefined
 			this.getData()
-			if(this.$route.params) {
-				this.$router.push({name:"search",params: this.$route.params})
+			if (this.$route.params) {
+				this.$router.push({
+					name: 'search',
+					params: this.$route.params,
+				})
 			}
 		},
-		kremove () {
+		kremove() {
 			this.searchParams.keyword = undefined
 			this.getData()
-			this.$bus.$emit("clear")
+			this.$bus.$emit('clear')
 			if (this.$route.query) {
-				this.$route.push({name: 'search', query:this.$route.query})
+				this.$route.push({ name: 'search', query: this.$route.query })
 			}
-		}, 
-		tremove () {
-			this.searchParams.trademark = ''
-			this.getData() 
 		},
-		tradeInfo (val) {
+		tremove() {
+			this.searchParams.trademark = ''
+			this.getData()
+		},
+		removeAttr(index) {
+			this.searchParams.props.splice(index, 1)
+			this.getData()
+		},
+		tradeInfo(val) {
 			console.log('val', val)
 			this.searchParams.trademark = `${val.tmId}:${val.tmName}`
 			this.getData()
-		}
+		},
+		attrInfo(attr, value) {
+			// console.log(attr, value)
+			let props = `${attr.attrId}:${value}:${attr.attrName}`
+			console.log(props)
+			if (this.searchParams.props.indexOf(props) === -1) {
+				this.searchParams.props.push(props)
+			}
+			this.getData()
+		},
+		isOne() {
+			return this.searchParams.order.indexOf('1') != -1
+		},
+		isTwo() {
+			return this.searchParams.order.indexOf('2') != -1
+		},
+		sort(flag) {
+			if(flag == 1) {
+				if(this.searchParams.order.indexOf('asc') !=-1) {
+					this.searchParams.order ='1:desc'
+				} else {
+					this.searchParams.order ='1:asc'
+				}
+				console.log(this.searchParams.order)
+			} else if(flag == 2) {
+				if(this.searchParams.order.indexOf('desc') !=-1) {
+					this.searchParams.order ='2:asc'
+				} else {
+					this.searchParams.order ='2:desc'
+				}
+				console.log(this.searchParams.order)
+			}
+			this.getData()
+		},
 	},
 	watch: {
 		$route(newValue, oldValue) {
-			Object.assign(this.searchParams, this.$route.params, this.$route.query)
+			Object.assign(
+				this.searchParams,
+				this.$route.params,
+				this.$route.query
+			)
 			console.log(this.searchParams)
 			this.getData()
 			this.searchParams.category1Id = ''
 			this.searchParams.category2Id = ''
 			this.searchParams.category3Id = ''
-		}
-	}
+		},
+	},
 }
 </script>
 
