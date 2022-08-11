@@ -187,10 +187,10 @@ export default {
 			if (this.$route.query) {
 				this.$route.push({name: 'search', query:this.$route.query})
 			}
-		},
+		}, 
 		tremove () {
 			this.searchParams.trademark = ''
-			this.getData()
+			this.getData() 
 		},
 		tradeInfo (val) {
 			console.log('val', val)
