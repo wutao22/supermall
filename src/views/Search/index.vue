@@ -125,7 +125,8 @@
 							</li>
 						</ul>
 					</div>
-					<Pagnation />
+					<Pagnation style="text-align:center" :curPage="searchParams.pageNo" :pageSize="searchParams.pageSize" 
+					:total="total" :continus="5" @changePage="changePage" />
 				</div>
 			</div>
 		</div>
@@ -164,6 +165,12 @@ export default {
 	},
 	computed: {
 		...mapGetters(['goodsList']),
+		// ...mapState({
+		// 	total: state=> {state.search.searchList.total}
+		// })
+		total() {
+			return this.$store.state.search.searchList.total
+		}
 	},
 	methods: {
 		getData() {
@@ -236,6 +243,11 @@ export default {
 			}
 			this.getData()
 		},
+		changePage (pageNo) {
+			this.searchParams.pageNo = pageNo
+			console.log(this.pageNo)
+			this.getData()
+		}
 	},
 	watch: {
 		$route(newValue, oldValue) {

@@ -1,26 +1,42 @@
 <template>
   <div class="pagination">
-    <button>1</button>
-    <button>上一页</button>
-    <button>···</button>
+    <button @click="$emit('changePage', curPage - 1)" :disabled="curPage == 1" >上一页</button>
+     <button :class="{active: curPage == 1}"  v-if="continusNum.start >= 2" @click="$emit('changePage', 1)">1</button>
+    <button v-if="continusNum.start > 2">···</button>
 
-    <button>3</button>
-    <button>4</button>
-    <button>5</button>
-    <button>6</button>
-    <button>7</button>
+    <button v-for="(page, index) in continusNum.end" :key="index" 
+    v-if="page >= continusNum.start" @click="$emit('changePage', page)" :class="{active: curPage == page}" >{{page}}</button>
     
-    <button>···</button>
-    <button>9</button>
-    <button>上一页</button>
-    
-    <button style="margin-left: 30px">共 60 条</button>
+    <button v-if="continusNum.end < totalPage - 1">···</button>
+    <button v-if="continusNum.end < totalPage" @click="$emit('changePage', totalPage)" :class="{active: curPage == totalPage}" >{{totalPage}}</button>
+    <button @click="$emit('changePage', totalPage)" :disabled="curPage == totalPage">下一页</button>
+    <button style="margin-left: 30px">共 {{total}}条</button>
   </div>
 </template>
 
 <script>
   export default {
     name: "Pagination",
+    props: ['curPage', "pageSize", "total", "continus"],
+    computed: {
+      totalPage() {
+        return Math.ceil(this.total / this.pageSize)
+      },
+      continusNum() {
+        let start,end = 0;
+        start = this.curPage - parseInt(this.continus / 2)
+        end = this.curPage + parseInt(this.continus / 2)
+        if (start < 1) {
+          start = 1
+          end = this.continus
+        }
+        if (end > this.totalPage) {
+          start = this.totalPage - this.continus + 1
+          end = this.totalPage
+        }
+        return {start,end}
+      }
+    }
   }
 </script>
 
