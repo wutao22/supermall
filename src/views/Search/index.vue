@@ -82,9 +82,9 @@
 							>
 								<div class="list-wrap">
 									<div class="p-img">
-										<a href="item.html" target="_blank"
-											><img :src="item.defaultImg"
-										/></a>
+										<router-link :to="`/detail/${item.id}`">
+											<img :src="item.defaultImg" />
+										</router-link>
 									</div>
 									<div class="price">
 										<strong>
@@ -125,8 +125,14 @@
 							</li>
 						</ul>
 					</div>
-					<Pagnation style="text-align:center" :curPage="searchParams.pageNo" :pageSize="searchParams.pageSize" 
-					:total="total" :continus="5" @changePage="changePage" />
+					<Pagnation
+						style="text-align: center"
+						:curPage="searchParams.pageNo"
+						:pageSize="searchParams.pageSize"
+						:total="total"
+						:continus="5"
+						@changePage="changePage"
+					/>
 				</div>
 			</div>
 		</div>
@@ -139,7 +145,7 @@ import { mapGetters, mapState } from 'vuex'
 export default {
 	name: 'Search',
 	components: {
-		SearchSelector
+		SearchSelector,
 	},
 	data() {
 		return {
@@ -170,7 +176,7 @@ export default {
 		// })
 		total() {
 			return this.$store.state.search.searchList.total
-		}
+		},
 	},
 	methods: {
 		getData() {
@@ -226,28 +232,28 @@ export default {
 			return this.searchParams.order.indexOf('2') != -1
 		},
 		sort(flag) {
-			if(flag == 1) {
-				if(this.searchParams.order.indexOf('asc') !=-1) {
-					this.searchParams.order ='1:desc'
+			if (flag == 1) {
+				if (this.searchParams.order.indexOf('asc') != -1) {
+					this.searchParams.order = '1:desc'
 				} else {
-					this.searchParams.order ='1:asc'
+					this.searchParams.order = '1:asc'
 				}
 				console.log(this.searchParams.order)
-			} else if(flag == 2) {
-				if(this.searchParams.order.indexOf('desc') !=-1) {
-					this.searchParams.order ='2:asc'
+			} else if (flag == 2) {
+				if (this.searchParams.order.indexOf('desc') != -1) {
+					this.searchParams.order = '2:asc'
 				} else {
-					this.searchParams.order ='2:desc'
+					this.searchParams.order = '2:desc'
 				}
 				console.log(this.searchParams.order)
 			}
 			this.getData()
 		},
-		changePage (pageNo) {
+		changePage(pageNo) {
 			this.searchParams.pageNo = pageNo
 			console.log(this.pageNo)
 			this.getData()
-		}
+		},
 	},
 	watch: {
 		$route(newValue, oldValue) {
