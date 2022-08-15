@@ -70,12 +70,12 @@
             </div>
             <div class="cartWrap">
               <div class="controls">
-                <input autocomplete="off" class="itxt">
-                <a href="javascript:" class="plus">+</a>
-                <a href="javascript:" class="mins">-</a>
+                <input autocomplete="off" class="itxt" type="number" min="1" v-model="skuNum">
+                <a href="javascript:" class="plus" @click="skuNum++">+</a>
+                <a href="javascript:" class="mins" @click="skuNum > 1 ? skuNum-- : 1">-</a>
               </div>
               <div class="add">
-                <a href="javascript:">加入购物车</a>
+                <a @click="addShopcart()">加入购物车</a>
               </div>
             </div>
           </div>
@@ -332,7 +332,11 @@
 
   export default {
     name: 'Detail',
-    
+    data() {
+      return {
+        skuNum: 1
+      }
+    },
     components: {
       ImageList,
       Zoom
@@ -346,7 +350,16 @@
       skuImageList () {
         return this.skuInfo.skuImageList || []
       }
-    }
+    },
+    methods: {
+      async addShopcart () {
+       let r = await this.$store.dispatch('addShopCart',{skuId: this.$route.params.skuid, skuNum: this.skuNum})
+       console.log(r)
+      //  if (r == 200) {
+      //   console.log("succeed")
+      //  }
+      }
+    },
   }
 </script>
 

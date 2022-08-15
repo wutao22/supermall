@@ -42,7 +42,7 @@ export default {
 	},
 	methods: {
 		tInfo(e) {
-			console.log(e)
+			// console.log(e)
 			this.$emit('tradeInfo', e)
 		},
 		attrInfo (attr, attrvalue) {

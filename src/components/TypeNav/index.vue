@@ -96,7 +96,6 @@ export default {
 			// this.$router.push('/search')
 
 			let element = event.target
-			console.log(element)
 			let { categoryname, category1id, category2id, category3id } =
 				element.dataset
 			if (categoryname) {
@@ -116,13 +115,11 @@ export default {
 		entershow() {
 			if (this.$route.path == '/search') {
 				this.show = true
-				console.log(2)
 			}
 		},
 		leavehide() {
 			if (this.$route.path == '/search') {
 				this.show = false
-					console.log(1)
 			}
 		},
 	},

@@ -212,14 +212,14 @@ export default {
 			this.getData()
 		},
 		tradeInfo(val) {
-			console.log('val', val)
+			// console.log('val', val)
 			this.searchParams.trademark = `${val.tmId}:${val.tmName}`
 			this.getData()
 		},
 		attrInfo(attr, value) {
 			// console.log(attr, value)
 			let props = `${attr.attrId}:${value}:${attr.attrName}`
-			console.log(props)
+			// console.log(props)
 			if (this.searchParams.props.indexOf(props) === -1) {
 				this.searchParams.props.push(props)
 			}
@@ -238,20 +238,20 @@ export default {
 				} else {
 					this.searchParams.order = '1:asc'
 				}
-				console.log(this.searchParams.order)
+				// console.log(this.searchParams.order)
 			} else if (flag == 2) {
 				if (this.searchParams.order.indexOf('desc') != -1) {
 					this.searchParams.order = '2:asc'
 				} else {
 					this.searchParams.order = '2:desc'
 				}
-				console.log(this.searchParams.order)
+				// console.log(this.searchParams.order)
 			}
 			this.getData()
 		},
 		changePage(pageNo) {
 			this.searchParams.pageNo = pageNo
-			console.log(this.pageNo)
+			// console.log(this.pageNo)
 			this.getData()
 		},
 	},
@@ -262,7 +262,7 @@ export default {
 				this.$route.params,
 				this.$route.query
 			)
-			console.log(this.searchParams)
+			// console.log(this.searchParams)
 			this.getData()
 			this.searchParams.category1Id = ''
 			this.searchParams.category2Id = ''
