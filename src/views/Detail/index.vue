@@ -353,11 +353,13 @@
     },
     methods: {
       async addShopcart () {
-       let r = await this.$store.dispatch('addShopCart',{skuId: this.$route.params.skuid, skuNum: this.skuNum})
-       console.log(r)
-      //  if (r == 200) {
-      //   console.log("succeed")
-      //  }
+        try {
+          sessionStorage.setItem('skuinfo', JSON.stringify(this.skuInfo))
+           await this.$store.dispatch('addShopCart',{skuId: this.$route.params.skuid, skuNum: this.skuNum})
+           this.$router.push({name:'addcartsuccess', query: {skuNum: this.skuNum}})
+        } catch (error) {
+          alert(error)
+        }
       }
     },
   }

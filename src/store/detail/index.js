@@ -1,7 +1,9 @@
 import { reqGoodsInfo, reqShopCart } from "@/api"
+import {getUUID} from '@/utils/utils'
 
 const state = {
-    goodsinfo: {}
+    goodsinfo: {},
+    uuid: getUUID()
 }
 const actions = {
     async getGoodsInfo({ commit }, skuid) {

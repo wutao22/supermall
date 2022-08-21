@@ -1,6 +1,8 @@
 // 对于axios进行二次封装
 import axios from 'axios'
 
+
+import store from '@/store';
 // 引入进度条
 import nprogress from 'nprogress'
 import "nprogress/nprogress.css";
@@ -15,6 +17,11 @@ const requests = axios.create({
 // 请求拦截器 在发请求之前请求拦截器可以检测到，可以在请求发出去之前做一些操作
 requests.interceptors.request.use((config) => {
   nprogress.start();
+  // console.log(store)
+  if(store.state.detail.uuid) {
+    config.headers.userTempId = store.state.detail.uuid
+  }
+  // if(store.)
   return config
 })
 
