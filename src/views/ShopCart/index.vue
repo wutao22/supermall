@@ -21,7 +21,7 @@
 							type="checkbox"
 							name="chk_list"
 							:checked="cart.isChecked"
-              @change="updatecheck(cart,$event.target.checked)"
+							@change="updatecheck(cart, $event.target.checked)"
 						/>
 					</li>
 					<li class="cart-list-con2">
@@ -44,7 +44,12 @@
 							:value="cart.skuNum"
 							minnum="1"
 							class="itxt"
-							@change="changeNum(cart, ($event.target.value * 1 - cart.skuNum) )"
+							@change="
+								changeNum(
+									cart,
+									$event.target.value * 1 - cart.skuNum
+								)
+							"
 						/>
 						<a
 							href="javascript:void(0)"
@@ -72,11 +77,12 @@
 					class="chooseAll"
 					type="checkbox"
 					:checked="isCheckedAll"
+					@change="updateAllChecked"
 				/>
 				<span>全选</span>
 			</div>
 			<div class="option">
-				<a href="#none">删除选中的商品</a>
+				<a href="#none" @click="deleteSelect()">删除选中的商品</a>
 				<a href="#none">移到我的关注</a>
 				<a href="#none">清除下柜商品</a>
 			</div>
@@ -98,38 +104,65 @@
 import { mapGetters, mapState } from 'vuex'
 export default {
 	data() {
-		return {
-		}
+		return {}
 	},
 	name: 'ShopCart',
 	created() {
 		this.getData()
 	},
 	methods: {
-    getData() {
-      this.$store.dispatch('getShopList')
-    },
-		changeNum(cart, num) {
-      if(cart.skuNum <= 1) {
-        num = 1
-      }
-      this.$store.dispatch('addShopCart',{skuId: cart.skuId,skuNum: num})
-      this.getData()
+		// 购物车数据
+		getData() {
+			this.$store.dispatch('getShopList')
 		},
-    deleteGoods(item) {
-      let r = this.$store.dispatch('deleteGoods',item.skuId)
-      console.log(r)
-      if (r) {
-         this.getData()
-      }
-    },
-    updatecheck(item, event){
-        let isChecked = Number(event)
-        let r = this.$store.dispatch('updateisChecked',{skuId:item.skuId,isChecked: isChecked})
-        if (r) {
-         this.getData()
-        }
-    }
+		// 修改商品数量
+		changeNum(cart, num) {
+			if (cart.skuNum <= 1) {
+				num = 1
+			}
+			this.$store.dispatch('addShopCart', {
+				skuId: cart.skuId,
+				skuNum: num,
+			})
+			this.getData()
+		},
+		// 删除商品
+		deleteGoods(item) {
+			let r = this.$store.dispatch('deleteGoods', item.skuId)
+			console.log(r)
+			if (r) {
+				this.getData()
+			}
+		},
+		// 修改状态 选中未选中
+		updatecheck(item, event) {
+			let isChecked = Number(event)
+			let r = this.$store.dispatch('updateisChecked', {
+				skuId: item.skuId,
+				isChecked: isChecked,
+			})
+			if (r) {
+				this.getData()
+			}
+		},
+		// 删除选中的商品
+		deleteSelect() {
+			try {
+				this.$store.dispatch('deleteAllCheckedById')
+				this.getData()
+			} catch (error) {
+				alert(error.message)
+			}
+		},
+		updateAllChecked(event) {
+			 try {
+				let isChecked = event.target.checked ? '1' : '0'
+				this.$store.dispatch('updateAllIsChecked', isChecked)
+				this.getData()
+			} catch (error) {
+				alert(error.message)
+			}
+		},
 	},
 	computed: {
 		...mapGetters(['shopListInfo']),
@@ -141,6 +174,7 @@ export default {
 			return sum
 		},
 		isCheckedAll() {
+			//every() 数组中每一项都
 			return this.shopListInfo.cartInfoList.every(
 				(item) => item.isChecked == 1
 			)
