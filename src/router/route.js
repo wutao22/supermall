@@ -5,11 +5,32 @@ import Register from '@/views/Register'
 import Detail from '@/views/Detail'
 import AddCartSuccess from '@/views/AddCartSuccess'
 import ShopCart from '@/views/ShopCart'
+import Trade from '@/views/Trade'
+import Pay from '@/views/Pay'
+import PaySuccess from '@/views/PaySuccess'
 
 export default [
   {
     path:'/',
     redirect: 'home'
+  },
+  {
+    path: '/trade',
+    name: 'trade',
+    component: Trade,
+    meta: { show: true }
+  },
+  {
+    path: '/paysuccess',
+    name: 'paysuccess',
+    component: PaySuccess,
+    meta: { show: true }
+  },
+  {
+    path: '/pay',
+    name: 'pay',
+    component: Pay,
+    meta: { show: true }
   },
   {
     path: '/addcartsuccess',
