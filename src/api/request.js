@@ -21,10 +21,6 @@ requests.interceptors.request.use((config) => {
   if(store.state.detail.uuid) {
     config.headers.userTempId = store.state.detail.uuid
   }
-  if(localStorage.getItem('userInfo')) {
-    let user = JSON.parse(localStorage.getItem('userInfo'))
-    config.headers.token = user.token
-  }
   // if(store.)
   return config
 })

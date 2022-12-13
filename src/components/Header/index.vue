@@ -5,17 +5,12 @@
 			<div class="container">
 				<div class="loginList">
 					<p>尚品汇欢迎您！</p>
-					<p v-if="!userInfo">
+					<p>
 						<span>请</span>
 						<router-link to="/login">登录</router-link>
 						<router-link to="/register" class="register"
 							>免费注册</router-link
 						>
-					</p>
-					<p v-else="userInfo">
-						<a>{{ userInfo.name }}</a>
-						<span style="color: #8b8b8b">|</span>
-						<a @click="logout"> 退出登录</a>
 					</p>
 				</div>
 				<div class="typeList">
@@ -64,14 +59,12 @@ export default {
 	data() {
 		return {
 			keyword: '',
-			userInfo: {},
 		}
 	},
-	created() {
-		this.$bus.$on('clear', () => {
+	mounted() {
+		this.$bus.$on("clear", () => {
 			this.keyword = ''
 		})
-		this.userInfo = JSON.parse(localStorage.getItem('user'))
 	},
 	methods: {
 		goSearch() {
@@ -84,17 +77,7 @@ export default {
 			// 	location.query = this.$route.query
 			// 	this.$router.push(location)
 			// }
-			this.$router.push({
-				name: 'search',
-				params: { keyword: this.keyword },
-			})
-		},
-		async logout() {
-			try {
-				await this.$store.dispatch('logout')
-				this.userInfo = JSON.parse(localStorage.getItem('user'))
-				this.$router.push('/home')
-			} catch (error) {}
+			this.$router.push({name:'search', params:{keyword:this.keyword}})
 		},
 	},
 }

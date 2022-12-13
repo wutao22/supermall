@@ -109,7 +109,6 @@ export default {
 	name: 'ShopCart',
 	created() {
 		this.getData()
-		this.getUserInfo()
 	},
 	methods: {
 		// 购物车数据
@@ -164,9 +163,6 @@ export default {
 				alert(error.message)
 			}
 		},
-		getUserInfo() {
-			this.$store.dispatch('getUserInfo')
-		}
 	},
 	computed: {
 		...mapGetters(['shopListInfo']),

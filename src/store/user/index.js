@@ -1,4 +1,4 @@
-import { getCode,reqRegister ,reqLogin,reqUserInfo, reqLogOut} from "@/api"
+import { getCode,reqRegister ,reqLogin} from "@/api"
 
 const state = {
     code: '',
@@ -34,21 +34,6 @@ const actions = {
         if (r.code === 200) {
             localStorage.setItem('userInfo', JSON.stringify(r.data))
             commit('USERLOGIN', r.data)
-            return 'ok'
-        }
-    },
-    async getUserInfo({commit}) {
-        let res = await reqUserInfo()
-        if (res.code === 200) {
-            localStorage.setItem('user', JSON.stringify( res.data))
-        }
-    },
-    async logout() {
-        let res = await reqLogOut()
-        if(res.code === 200) {
-            localStorage.removeItem('user')
-            localStorage.removeItem('userInfo')
-            return 'ok'
         }
     }
 }
